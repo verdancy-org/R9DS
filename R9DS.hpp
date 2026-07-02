@@ -73,9 +73,8 @@ class R9DS : public LibXR::Application {
        const char* data_topic_name, const char* rc_state_topic_name,
        uint32_t signal_timeout_ms, size_t task_stack_depth)
       : signal_timeout_ms_(signal_timeout_ms),
-        data_topic_(data_topic_name, sizeof(data_)),
-        rc_topic_(rc_state_topic_name, sizeof(rc_state_), nullptr, true, true,
-                  true),
+        data_topic_(LibXR::Topic::CreateTopic<Data>(data_topic_name)),
+        rc_topic_(LibXR::Topic::CreateTopic<State>(rc_state_topic_name, nullptr, true)),
         uart_(hw.template FindOrExit<LibXR::UART>({"sbus_uart"})),
         cmd_file_(LibXR::RamFS::CreateFile("r9ds", CommandFunc, this)) {
     app.Register(*this);
