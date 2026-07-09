@@ -1,6 +1,11 @@
 # R9DS
 
-FrSky R9DS SBUS receiver input and RC processing module.
+RadioLink R9DS UART SBUS receiver module for XRobot.
+
+This module configures the SBUS UART, decodes R9DS receiver frames in a
+background thread, publishes raw channel timing and normalized RC state topics,
+tracks failsafe / no-signal state, and exposes a RamFS shell command for status
+output.
 
 ## Required Hardware
 
@@ -9,18 +14,30 @@ FrSky R9DS SBUS receiver input and RC processing module.
 
 ## Constructor Arguments
 
-- `data_topic_name`: `r9ds_data`
-- `rc_state_topic_name`: `rc_state`
-- `signal_timeout_ms`: `50`
-- `task_stack_depth`: `1024`
+- `data_topic_name`: default `"r9ds_data"`
+- `rc_state_topic_name`: default `"rc_state"`
+- `signal_timeout_ms`: default `50`
+- `task_stack_depth`: default `1024`
 
-## Outputs
+## Published Topics
 
-- `R9DS::Data`
-- `R9DS::State`
+- `data_topic_name`: `R9DS::Data`, raw SBUS channel timing, signal frequency, flags, failsafe, and no-signal state
+- `rc_state_topic_name`: `R9DS::State`, normalized RC channels, stick values, throttle state, and flight-mode switches
 
-## Notes
+## Shell Commands
 
-- Decodes SBUS frames from the R9DS receiver.
-- Publishes both raw channel timing and normalized RC state used by the
-  upper-level flight logic.
+The module registers `r9ds` in `RamFS`.
+
+- `r9ds` or `r9ds status`: print signal status, channel values, and decoded RC state
+
+## XRobot Configuration Example
+
+```yaml
+- id: rc_receiver
+  name: R9DS
+  constructor_args:
+    data_topic_name: "r9ds_data"
+    rc_state_topic_name: "rc_state"
+    signal_timeout_ms: 50
+    task_stack_depth: 1024
+```

@@ -2,7 +2,7 @@
 
 // clang-format off
 /* === MODULE MANIFEST V2 ===
-module_description: FrSky R9DS SBUS receiver input and RC processing module
+module_description: XRobot Module for RadioLink R9DS SBUS receiver
 constructor_args:
   - data_topic_name: "r9ds_data"
   - rc_state_topic_name: "rc_state"
